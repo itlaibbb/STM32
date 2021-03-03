@@ -126,9 +126,10 @@ int main(void)
   setAutoAck(false);				//автоподтверждение
   ///setAutoAckPipe(1, true);		//автоподтверждение для 1-й трубы
   ///enableAckPayload();			//разрешить добавлять полезную нагрузку в атоподтверждении
+  enableAckPayload();  // Разрешение отправки нетипового ответа передатчику;
   // Автоматически включает динамический размер полезной нагрузки для труб №0 и №1,
   //для остальных труб нужно запускать — enableDynamicPayloads().
-  /// enableDynamicPayloads();  //включить динамический размер полезной нагрузки.
+  ///enableDynamicPayloads();  //включить динамический размер полезной нагрузки.
   ///disableDynamicPayloads();   //oтключает динамическую полезную нагрузку во всей системе.
   //disableCRC(); 				// отключить CRC,
   // перед этим запустить setAutoAck(false) и disableDynamicPayloads().
@@ -228,8 +229,6 @@ int main(void)
 	  HAL_UART_Transmit(&huart1, (uint8_t*)"RF24_CRC_16\n", strlen("RF24_CRC_16\n"), 1000);
   }
   /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
   maskIRQ(true, true, true); // маскируем прерывания
   /* USER CODE END 2 */
 
@@ -243,11 +242,18 @@ int main(void)
 //	static uint8_t remsg = 0;
 	uint8_t	count=32;			//количество принимаемых байт
 	uint8_t pipe_num = 1;
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
+	uint32_t message = 111;  //Вот какой потенциальной длины сообщение - uint32_t!
+	//туда можно затолкать значение температуры от датчика или еще что-то полезное.
+	writeAckPayload( 1, &message, sizeof(message) ); // Грузим сообщение для автоотправки;
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	if(available(&pipe_num)) // проверяем пришло ли что-то
 	        {
 			HAL_GPIO_TogglePin(LEDPIN_GPIO_Port, LEDPIN_Pin);
+
 			read(&nrf_data, count); // Читаем данные в массив nrf_data и указываем сколько байт читать
+
 			snprintf(str, 64, "data[0]=%d data[1]=%d data[2]=%d data[3]%d\n", nrf_data[0], nrf_data[1], nrf_data[2],nrf_data[3]);
 			HAL_UART_Transmit(&huart1, (uint8_t*)str, strlen(str), 1000);
 //			HAL_UART_Transmit(&huart1, (uint8_t*)"pipe 1\n", strlen("pipe 1\n"), 1000);

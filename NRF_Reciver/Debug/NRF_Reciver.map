@@ -3249,7 +3249,7 @@ LOAD /opt/st/stm32cubeide_1.4.0/plugins/com.st.stm32cube.ide.mcu.externaltools.g
  .debug_line    0x000000000000a98b      0x6be Src/system_stm32f1xx.o
  .debug_line    0x000000000000b049       0x7d startup/startup_stm32f103xb.o
 
-.debug_str      0x0000000000000000    0x6df8a
+.debug_str      0x0000000000000000    0x6dfb3
  .debug_str     0x0000000000000000    0x6609a Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.o
                                       0x663de (size before relaxing)
  .debug_str     0x000000000006609a      0x2e1 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.o
@@ -3262,19 +3262,19 @@ LOAD /opt/st/stm32cubeide_1.4.0/plugins/com.st.stm32cube.ide.mcu.externaltools.g
                                       0x66635 (size before relaxing)
  .debug_str     0x0000000000067386      0x693 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.o
                                       0x66671 (size before relaxing)
- .debug_str     0x0000000000067a19     0x4860 Src/main.o
-                                      0x6ad57 (size before relaxing)
- .debug_str     0x000000000006c279      0x404 Src/nrf24l01.o
+ .debug_str     0x0000000000067a19     0x4889 Src/main.o
+                                      0x6ad5e (size before relaxing)
+ .debug_str     0x000000000006c2a2      0x404 Src/nrf24l01.o
                                       0x6ada1 (size before relaxing)
- .debug_str     0x000000000006c67d       0x1b Src/stm32f1xx_hal_msp.o
+ .debug_str     0x000000000006c6a6       0x1b Src/stm32f1xx_hal_msp.o
                                       0x663a6 (size before relaxing)
- .debug_str     0x000000000006c698       0xb8 Src/stm32f1xx_it.o
+ .debug_str     0x000000000006c6c1       0xb8 Src/stm32f1xx_it.o
                                       0x65de6 (size before relaxing)
- .debug_str     0x000000000006c750     0x17a2 Src/syscalls.o
+ .debug_str     0x000000000006c779     0x17a2 Src/syscalls.o
                                        0x8f11 (size before relaxing)
- .debug_str     0x000000000006def2       0x69 Src/system_stm32f1xx.o
+ .debug_str     0x000000000006df1b       0x69 Src/system_stm32f1xx.o
                                       0x65d83 (size before relaxing)
- .debug_str     0x000000000006df5b       0x2f startup/startup_stm32f103xb.o
+ .debug_str     0x000000000006df84       0x2f startup/startup_stm32f103xb.o
                                          0x51 (size before relaxing)
 
 .comment        0x0000000000000000       0x53

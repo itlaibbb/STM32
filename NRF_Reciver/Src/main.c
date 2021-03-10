@@ -123,7 +123,7 @@ int main(void)
   HAL_UART_Transmit(&huart1, (uint8_t*)str, strlen(str), 1000);
 
   ////////////// SET ////////////////
-  setAutoAck(false);				//автоподтверждение
+  setAutoAck(true);				//автоподтверждение
   ///setAutoAckPipe(1, true);		//автоподтверждение для 1-й трубы
   ///enableAckPayload();			//разрешить добавлять полезную нагрузку в атоподтверждении
   enableAckPayload();  // Разрешение отправки нетипового ответа передатчику;
@@ -138,7 +138,7 @@ int main(void)
   //RF24_250KBPS
   //RF24_1MBPS
   //RF24_2MBPS
-  setPALevel(RF24_PA_MAX);		//мощность передатчика
+  setPALevel(RF24_PA_MIN);		//мощность передатчика
   //RF24_PA_MIN = -18dBm
   //RF24_PA_LOW = -12dBm
   //RF24_PA_HIGH = -6dBM
@@ -243,7 +243,7 @@ int main(void)
 	uint8_t	count=32;			//количество принимаемых байт
 	uint8_t pipe_num = 1;
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
-	uint32_t message = 111;  //Вот какой потенциальной длины сообщение - uint32_t!
+	int16_t message = 111;  //Вот какой потенциальной длины сообщение - uint32_t!
 	//туда можно затолкать значение температуры от датчика или еще что-то полезное.
 	writeAckPayload( 1, &message, sizeof(message) ); // Грузим сообщение для автоотправки;
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -254,7 +254,7 @@ int main(void)
 
 			read(&nrf_data, count); // Читаем данные в массив nrf_data и указываем сколько байт читать
 
-			snprintf(str, 64, "data[0]=%d data[1]=%d data[2]=%d data[3]%d\n", nrf_data[0], nrf_data[1], nrf_data[2],nrf_data[3]);
+			snprintf(str, 128, "data[0]=%d data[1]=%d data[2]=%d data[3]%d data[4]%d\n", nrf_data[0], nrf_data[1], nrf_data[2],nrf_data[3], nrf_data[4]);
 			HAL_UART_Transmit(&huart1, (uint8_t*)str, strlen(str), 1000);
 //			HAL_UART_Transmit(&huart1, (uint8_t*)"pipe 1\n", strlen("pipe 1\n"), 1000);
 	        }

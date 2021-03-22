@@ -60,20 +60,6 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define led13_Pin GPIO_PIN_13
 #define led13_GPIO_Port GPIOC
-#define SEG_A_Pin GPIO_PIN_0
-#define SEG_A_GPIO_Port GPIOA
-#define SEG_B_Pin GPIO_PIN_1
-#define SEG_B_GPIO_Port GPIOA
-#define SEG_C_Pin GPIO_PIN_2
-#define SEG_C_GPIO_Port GPIOA
-#define SEG_D_Pin GPIO_PIN_3
-#define SEG_D_GPIO_Port GPIOA
-#define SEG_E_Pin GPIO_PIN_4
-#define SEG_E_GPIO_Port GPIOA
-#define SEG_F_Pin GPIO_PIN_5
-#define SEG_F_GPIO_Port GPIOA
-#define SEG_G_Pin GPIO_PIN_6
-#define SEG_G_GPIO_Port GPIOA
 #define DINDON_Pin GPIO_PIN_7
 #define DINDON_GPIO_Port GPIOA
 #define KEY_1_Pin GPIO_PIN_0
@@ -84,14 +70,6 @@ void Error_Handler(void);
 #define KEY_3_GPIO_Port GPIOB
 #define KEY_4_Pin GPIO_PIN_11
 #define KEY_4_GPIO_Port GPIOB
-#define NUM3_Pin GPIO_PIN_12
-#define NUM3_GPIO_Port GPIOB
-#define NUM4_Pin GPIO_PIN_13
-#define NUM4_GPIO_Port GPIOB
-#define NUM2_Pin GPIO_PIN_14
-#define NUM2_GPIO_Port GPIOB
-#define NUM1_Pin GPIO_PIN_15
-#define NUM1_GPIO_Port GPIOB
 #define LED_SOUND_Pin GPIO_PIN_8
 #define LED_SOUND_GPIO_Port GPIOA
 /* USER CODE BEGIN Private defines */

@@ -72,6 +72,10 @@ void Error_Handler(void);
 #define KEY_4_GPIO_Port GPIOB
 #define LED_SOUND_Pin GPIO_PIN_8
 #define LED_SOUND_GPIO_Port GPIOA
+#define ST_CP_Pin GPIO_PIN_6
+#define ST_CP_GPIO_Port GPIOB
+#define OE_Pin GPIO_PIN_7
+#define OE_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 #define	debug_0	TRUE	//включить вывод значений RTC для отладки
 #define	debug_1	TRUE	//включить вывод значений кнопок для отладки

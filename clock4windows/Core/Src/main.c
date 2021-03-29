@@ -43,40 +43,57 @@
 /* Private variables ---------------------------------------------------------*/
 RTC_HandleTypeDef hrtc;
 
-SPI_HandleTypeDef hspi1;
-
 TIM_HandleTypeDef htim1;
 
 UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
+
+uint8_t aTxBuffer[1]={0};	//буфер для передачи данных по SPI
+
+#define cs_set() HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_RESET)
+#define cs_reset() HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_SET)
+#define cs_strob() cs_reset();cs_set()
+
+#define data_set() HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_SET)
+#define data_reset() HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_RESET)
+
+#define spi_set() HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_SET)
+#define spi_reset() HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_RESET)
+#define spi_strob() spi_reset();spi_set();spi_reset()
+
+
+
 RTC_TimeTypeDef sTime = {0};
 RTC_DateTypeDef DateToUpdate = {0};
 
 volatile	int	count=0;
-volatile	int	c_num=0;
-volatile	int c_key_dr=0;
-volatile	int keyscan=0;
-volatile	int key[]={0,0,0,0};
-			int key_f[]={0,0,0,0};
-			int	c_mde=0;			//режим работы: 0 - индикация времени, 1 - установка часов, 2 - установка минут
-			int	dindonf=0;
+//volatile	int	c_num=0;
+//volatile	int c_key_dr=0;
+//volatile	int keyscan=0;
+//volatile	int key[]={0,0,0,0};
+//			int key_f[]={0,0,0,0};
+//			int	c_mde=0;			//режим работы: 0 - индикация времени, 1 - установка часов, 2 - установка минут
+//			int	dindonf=0;
 //volatile	uint8_t Hours_L=0;
 //volatile	uint8_t Hours_H=0;
 //volatile	uint8_t Minutes_L=0;
 //volatile	uint8_t Minutes_H=0;
+			int	Tmp=0;
 
 volatile	int Hours_L=0;
 volatile	int Hours_H=0;
 volatile	int Minutes_L=0;
 volatile	int Minutes_H=0;
+volatile	int Seconds_L=0;
+volatile	int Seconds_H=0;
 
 //			int	num_ind[]={0b0000111111111111,0b0010111111111111,0b0100111111111111,0b1000111111111111};
-volatile	int	num_ind[]={0b0001111111111111,0b0010111111111111,0b1000111111111111, 0b0100111111111111};
+// volatile	int	num_ind[]={0b0001111111111111,0b0010111111111111,0b1000111111111111, 0b0100111111111111};
 
 //volatile	uint8_t	sgm_out[4]={0,};	//массив для 4-х выводимых на индикатор цифр в коде 7seg
-volatile	int	sgm_out[4]={0,};	//массив для 4-х выводимых на индикатор цифр в коде 7seg
-
+//volatile	int	sgm_out[4]={0,};	//массив для 4-х выводимых на индикатор цифр в коде 7seg
+		uint8_t sgm_out[5]={0,};	//массив для 6-х выводимых на индикатор цифр в коде 7seg
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -85,7 +102,6 @@ static void MX_GPIO_Init(void);
 static void MX_RTC_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_TIM1_Init(void);
-static void MX_SPI1_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -100,7 +116,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 //прерываемя каждую 0,5 мсек.
 //	  rtc_get();
 	 count++;
-//Вывод цифры на индикатор
+/*
 	  GPIOB->ODR &= 0b0000111111111111;		//гасим все разряды
 //	  GPIOB->ODR |= 0b0100111111111111;
 	  GPIOB->ODR |= num_ind[c_num];			//
@@ -108,6 +124,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	  GPIOA->ODR &= 0b1111111110000000;		//сбрасываем младшие 7 бит А в 0
 	  GPIOA->ODR |= sgm_out[c_num];			//устанавливаем значения сегментов
 	  c_num++;
+//
+
 	  if(c_num==4)
 	  {
 		  c_num=0;
@@ -150,16 +168,16 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		  	  }
 		c_key_dr=0;
 	  }
-
+*/
    }
 }
 //
 //
 //процедура заполнения массива кода клавиш
-void key_inp (void)
-{
-
-}
+//void key_inp (void)
+//{
+//
+//}
 //Процедура подучения времени и даты из RTC
 //
 //Вход: null
@@ -173,6 +191,8 @@ void rtc_get(void)
 	///////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////
 	//Преобразуем значение времени в BCD формат
+		  	  	  	Seconds_H=sTime.Seconds/10;
+		  	  	  	Seconds_L=sTime.Seconds-(Seconds_H*10);
 		            Minutes_H=sTime.Minutes/10;
 		            Minutes_L=sTime.Minutes-(Minutes_H*10);
 		            Hours_H=sTime.Hours/10;
@@ -227,23 +247,42 @@ uint8_t	bcd27seg (uint8_t bcd)
 	return (sgm_m[bcd]);
 }
 //
+/*
+//Процедура очистки индикатора
+void	clr_all (void)
+{
+ 	 aTxBuffer[0]=0x00;
+ 	 cs_set();
+ 	 for(int i=0;i<6;i++)
+ 	 {
+ 		 HAL_SPI_Transmit(&hspi1,(uint8_t*)aTxBuffer, 1, 500);
+ 	 }
+//	    	 HAL_SPI_Transmit(&hspi1,(uint8_t*) sgm_out, 4, 5000);
+ 	 cs_strob();
 //
-//процедура вывода сигнала каждый час
-	void dindon(void)
-	{
-		static int Hours_temp=5;
-		if(sTime.Hours != Hours_temp)
-		{
-			Hours_temp=sTime.Hours;
-			HAL_GPIO_WritePin(DINDON_GPIO_Port,DINDON_Pin,GPIO_PIN_SET);
-//			HAL_GPIO_WritePin(DINDON_GPIO_Port,DINDON_Pin,GPIO_PIN_RESET);
-		}
-		else
-		{
-			HAL_GPIO_WritePin(DINDON_GPIO_Port,DINDON_Pin,GPIO_PIN_RESET);
-		}
-
-	}
+}
+*/
+//Вывод цифры
+void	num_out(int num)
+{
+		Tmp=1;
+	 	cs_set();
+	 	 for(int i=0;i<7;i++)
+	 	 {
+	 	 if(sgm_out[num] & (64/Tmp))
+	 	{
+	 		data_set();
+	 	}
+	 	else
+	 	{
+	 		data_reset();
+	 	}
+	 	spi_strob();
+	 	Tmp=Tmp*2;
+	 	 }
+	    data_reset();
+	    spi_strob();
+}
 //
 //
 /* USER CODE END 0 */
@@ -279,161 +318,48 @@ int main(void)
   MX_RTC_Init();
   MX_USART1_UART_Init();
   MX_TIM1_Init();
-  MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim1); // передаём в функцию указатель на структуру TIM1
+//	  clr_all();				//очистка дисплея
+
+  for(int i=0;i<8;i++)
+  	  {
+  	  	data_reset();
+  	 	spi_strob();
+  	  }
+
+  	    cs_strob();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  c_mde=0;
   while (1)
   {
-//
-//КНОПКИ
-//
-//нажатие на KEY1 (установка режимов)
-//
-	  if((key[0]==1) && (key_f[0]==0))
-	  {
-		  key_f[0]=1;
-		  c_mde++;					//переход на следующий режим
-	  }
-	  if((key[0]==0) && (key_f[0]==1))
-	  {
-		  key_f[0]=0;
-	  }
-	  if(c_mde==3)					//всего режимов 3
-	  {
-		  c_mde=0;					//если переход на 4-й режим, то возврат в режим 0
-	  }
-//
-//
-//нажатие на KEY2 (уменьшение)
-//
-	  if((key[1]==1) && (key_f[1]==0))
-	  {
-		  key_f[1]=1;
-		  if(c_mde==1)				//уменьшение часов
-		  {
-			  if(sTime.Hours > 1)
-			  {
-				  sTime.Hours--;
-			  }
-			  else
-			  {
-				  sTime.Hours=24;
-			  }
-		  }
-		  if(c_mde==2)				//уменьшение минут
-		  {
-			  if(sTime.Minutes > 1)
-			  {
-				  sTime.Minutes--;
-			  }
-			  else
-			  {
-				  sTime.Minutes=59;
-			  }
-		  }
-		HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN); // RTC_FORMAT_BIN , RTC_FORMAT_BCD
-	  }
-	  if((key[1]==0) && (key_f[1]==1))
-	  {
-		  key_f[1]=0;
-	  }
-//
-//
-//нажатие на KEY3 (увеличение)
-//
-	  	  if((key[2]==1) && (key_f[2]==0))
-	  	  {
-	  		  key_f[2]=1;
-	  		  if(c_mde==1)				//увеличение часов
-	  		  {
-	  			  if(sTime.Hours < 23)
-	  			  {
-	  				  sTime.Hours++;
-	  			  }
-	  			  else
-	  			  {
-	  				  sTime.Hours=0;
-	  			  }
-	  		  }
-	  		  if(c_mde==2)				//увеличение минут
-	  		  {
-	  			  if(sTime.Minutes < 59)
-	  			  {
-	  				  sTime.Minutes++;
-	  			  }
-	  			  else
-	  			  {
-	  				  sTime.Minutes=0;
-	  			  }
-	  		  }
-	  		HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN); // RTC_FORMAT_BIN , RTC_FORMAT_BCD
-	  	  }
-	  	  if((key[2]==0) && (key_f[2]==1))
-	  	  {
-	  		  key_f[2]=0;
-	  	  }
-//
-//
-//нажатие на KEY4 (включение/выключение звука)
-//
-	  	  if((key[3]==1) && (key_f[3]==0))
-	  	  {
-	  		  key_f[3]=1;
-	  		  dindonf=!dindonf;
-	  	  }
-	  	  if((key[3]==0) && (key_f[3]==1))
-	  	  {
-	  		  key_f[3]=0;
-	  	  }
+	  //Вывод цифры на индикатор
+	  //
+	  //	 HAL_SPI_Transmit(&hspi1,(uint8_t*)aTxBuffer, 1, 5000);
 
 
-//
-//
-//РЕЖИМЫ
-//
-//мигающие режимы (1,2)
-//
-  if((count>=500) && (count<1000))
-	{
-	  if(c_mde==1)							//установка часов
-	  {
-		  sgm_out[3]=bcd27seg(11);			//преобразуем время в 7seg код
-		  sgm_out[2]=bcd27seg(11);			//--""--
 
-	  }
-	  if(c_mde==2)							//установка минут
-	  {
-		  sgm_out[1]=bcd27seg(11);			//преобразуем время в 7seg код
-		  sgm_out[0]=bcd27seg(11);			//--""--
-
-	  }
-	}
-//
-//
 	  if(count>=1000)
 	  {
 //1 раз в 0,5 секунды
 	  count=0;
       HAL_GPIO_TogglePin(led13_GPIO_Port, led13_Pin); // переключаем пин мигалки в противоположное состояние
 	  rtc_get();		//получаем текущее время и преобразуем его d BCD Hours_L, Hours_Н, Minutes_L, Minutes_Н
-	  sgm_out[3]=bcd27seg(Hours_H);			//преобразуем время в 7seg код
-	  sgm_out[2]=bcd27seg(Hours_L);			//--""--
-	  sgm_out[1]=bcd27seg(Minutes_H);		//--""--
-	  sgm_out[0]=bcd27seg(Minutes_L);		//--""--
-	  	  if(dindonf==1)						//если включени режим вывода звука
-	  	  {
-	  		  dindon();							//вывод сигнада каждый час
-	  		  HAL_GPIO_WritePin(LED_SOUND_GPIO_Port,LED_SOUND_Pin,GPIO_PIN_SET);	//индикация режима вывода звука
-	  	  }
-	  	 else
-	  	  {
-	  		  HAL_GPIO_WritePin(LED_SOUND_GPIO_Port,LED_SOUND_Pin,GPIO_PIN_RESET);	//индикация режима вывода звука
-	  	  }
+	  sgm_out[5]=bcd27seg(Hours_H);			//преобразуем время в 7seg код
+	  sgm_out[4]=bcd27seg(Hours_L);			//--""--
+	  sgm_out[3]=bcd27seg(Minutes_H);		//--""--
+	  sgm_out[2]=bcd27seg(Minutes_L);		//--""--
+	  sgm_out[1]=bcd27seg(Seconds_H);		//--""--
+	  sgm_out[0]=bcd27seg(Seconds_L);		//--""--
+//
+//загружаем цифры для индикации
+	  for(int i=0;i<6;i++)
+	  {
+	  num_out(i);
+	  }
+	    cs_strob();		//включаем индикацию
 	    }
 
 #ifdef debug_1
@@ -532,7 +458,7 @@ static void MX_RTC_Init(void)
   /** Initialize RTC and set the Time and Date
   */
   sTime.Hours = 17;
-  sTime.Minutes = 10;
+  sTime.Minutes = 20;
   sTime.Seconds = 0;
 
   if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN) != HAL_OK)
@@ -551,44 +477,6 @@ static void MX_RTC_Init(void)
   /* USER CODE BEGIN RTC_Init 2 */
 
   /* USER CODE END RTC_Init 2 */
-
-}
-
-/**
-  * @brief SPI1 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_SPI1_Init(void)
-{
-
-  /* USER CODE BEGIN SPI1_Init 0 */
-
-  /* USER CODE END SPI1_Init 0 */
-
-  /* USER CODE BEGIN SPI1_Init 1 */
-
-  /* USER CODE END SPI1_Init 1 */
-  /* SPI1 parameter configuration*/
-  hspi1.Instance = SPI1;
-  hspi1.Init.Mode = SPI_MODE_MASTER;
-  hspi1.Init.Direction = SPI_DIRECTION_2LINES;
-  hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
-  hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
-  hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
-  hspi1.Init.NSS = SPI_NSS_SOFT;
-  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_4;
-  hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
-  hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
-  hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-  hspi1.Init.CRCPolynomial = 10;
-  if (HAL_SPI_Init(&hspi1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN SPI1_Init 2 */
-
-  /* USER CODE END SPI1_Init 2 */
 
 }
 
@@ -693,7 +581,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOA, DINDON_Pin|LED_SOUND_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, ST_CP_Pin|OE_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3|GPIO_PIN_5|ST_CP_Pin|OE_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : led13_Pin */
   GPIO_InitStruct.Pin = led13_Pin;
@@ -713,6 +601,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pin = KEY_1_Pin|KEY_2_Pin|KEY_3_Pin|KEY_4_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : PB3 PB5 */
+  GPIO_InitStruct.Pin = GPIO_PIN_3|GPIO_PIN_5;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pins : ST_CP_Pin OE_Pin */

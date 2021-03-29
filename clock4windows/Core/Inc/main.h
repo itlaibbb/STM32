@@ -77,8 +77,8 @@ void Error_Handler(void);
 #define OE_Pin GPIO_PIN_7
 #define OE_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
-#define	debug_0	TRUE	//включить вывод значений RTC для отладки
-#define	debug_1	TRUE	//включить вывод значений кнопок для отладки
+//#define	debug_0	TRUE	//включить вывод значений RTC для отладки
+//#define	debug_1	TRUE	//включить вывод значений кнопок для отладки
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

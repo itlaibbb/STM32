@@ -35,34 +35,34 @@ $(wildcard ../makefile.init) \
 $(wildcard ../makefile.targets) \
 
 
-BUILD_ARTIFACT_NAME := clock_7seg
+BUILD_ARTIFACT_NAME := clock4windows
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX := 
 BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME).$(BUILD_ARTIFACT_EXTENSION)
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-clock_7seg.elf \
+clock4windows.elf \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-clock_7seg.list \
+clock4windows.list \
 
 OBJCOPY_BIN += \
-clock_7seg.bin \
+clock4windows.bin \
 
 
 # All Target
 all: main-build
 
 # Main-build Target
-main-build: clock_7seg.elf secondary-outputs
+main-build: clock4windows.elf secondary-outputs
 
 # Tool invocations
-clock_7seg.elf: $(OBJS) $(USER_OBJS) /home/itlai/DIST/STM32/clock_7seg/STM32F103C8TX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "clock_7seg.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"/home/itlai/DIST/STM32/clock_7seg/STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="clock_7seg.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+clock4windows.elf: $(OBJS) $(USER_OBJS) /home/itlai/DIST/STM32/clock4windows/STM32F103C8TX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "clock4windows.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"/home/itlai/DIST/STM32/clock4windows/STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="clock4windows.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -71,13 +71,13 @@ default.size.stdout: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-clock_7seg.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "clock_7seg.list"
+clock4windows.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "clock4windows.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
-clock_7seg.bin: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "clock_7seg.bin"
+clock4windows.bin: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "clock4windows.bin"
 	@echo 'Finished building: $@'
 	@echo ' '
 

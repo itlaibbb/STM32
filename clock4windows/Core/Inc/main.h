@@ -60,8 +60,18 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define led13_Pin GPIO_PIN_13
 #define led13_GPIO_Port GPIOC
-#define DINDON_Pin GPIO_PIN_7
-#define DINDON_GPIO_Port GPIOA
+#define LED1_Pin GPIO_PIN_0
+#define LED1_GPIO_Port GPIOA
+#define LED2_Pin GPIO_PIN_1
+#define LED2_GPIO_Port GPIOA
+#define B_1A_Pin GPIO_PIN_3
+#define B_1A_GPIO_Port GPIOA
+#define B_1B_Pin GPIO_PIN_4
+#define B_1B_GPIO_Port GPIOA
+#define A_1A_Pin GPIO_PIN_5
+#define A_1A_GPIO_Port GPIOA
+#define A_1B_Pin GPIO_PIN_6
+#define A_1B_GPIO_Port GPIOA
 #define KEY_1_Pin GPIO_PIN_0
 #define KEY_1_GPIO_Port GPIOB
 #define KEY_2_Pin GPIO_PIN_1
@@ -74,8 +84,6 @@ void Error_Handler(void);
 #define LED_SOUND_GPIO_Port GPIOA
 #define ST_CP_Pin GPIO_PIN_6
 #define ST_CP_GPIO_Port GPIOB
-#define OE_Pin GPIO_PIN_7
-#define OE_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 //#define	debug_0	TRUE	//включить вывод значений RTC для отладки
 //#define	debug_1	TRUE	//включить вывод значений кнопок для отладки

@@ -395,6 +395,7 @@ int main(void)
 	  				  sTime.Minutes=59;
 	  			  }
 	  		  }
+	  		sTime.Seconds=0;
 	  		HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN); // RTC_FORMAT_BIN , RTC_FORMAT_BCD
 	  	  }
 	  	  if((key[1]==0) && (key_f[1]==1))
@@ -430,6 +431,7 @@ int main(void)
 	  	  				  sTime.Minutes=0;
 	  	  			  }
 	  	  		  }
+	  	  		sTime.Seconds=0;
 	  	  		HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN); // RTC_FORMAT_BIN , RTC_FORMAT_BCD
 	  	  	  }
 	  	  	  if((key[2]==0) && (key_f[2]==1))
@@ -596,7 +598,7 @@ static void MX_RTC_Init(void)
 
   /* USER CODE END RTC_Init 0 */
 
-  RTC_TimeTypeDef sTime = {0};
+  //RTC_TimeTypeDef sTime = {0};
   RTC_DateTypeDef DateToUpdate = {0};
 
   /* USER CODE BEGIN RTC_Init 1 */
@@ -622,14 +624,17 @@ static void MX_RTC_Init(void)
   sTime.Minutes = 38;
   sTime.Seconds = 0;
 
-  if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN) != HAL_OK)
-  {
-    Error_Handler();
-  }
+  //if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN) != HAL_OK)
+  //{
+//    Error_Handler();
+//  }
   DateToUpdate.WeekDay = RTC_WEEKDAY_MONDAY;
   DateToUpdate.Month = RTC_MONTH_JANUARY;
   DateToUpdate.Date = 1;
   DateToUpdate.Year = 20;
+
+  BKP->RTCCR |= 28;                                                                        //калибровка RTC
+  RTC->PRLL  = 0x7FFE;                                                                    //Настроит делитель на 32768 (32767+1)
 
   if (HAL_RTC_SetDate(&hrtc, &DateToUpdate, RTC_FORMAT_BIN) != HAL_OK)
   {

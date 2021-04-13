@@ -74,6 +74,7 @@ volatile	int keyscan=0;
 volatile	int key[]={0,0,0,0};
 			int key_f[]={0,0,0,0};
 			int	c_mde=0;			//режим работы: 0 - индикация времени, 1 - установка часов, 2 - установка минут
+			int key4_count=0;		//режим работы рекуператора: 0 - выключен, 1 - выдув, 2 - вдув, 3 - рекуперация
 //			int	dindonf=0;
 //volatile	uint8_t Hours_L=0;
 //volatile	uint8_t Hours_H=0;
@@ -445,6 +446,11 @@ int main(void)
 	  	  	  if((key[3]==1) && (key_f[3]==0))
 	  	  	  {
 	  	  		  key_f[3]=1;
+	  	  		  key4_count++;
+	  	  		  if(key4_count == 4)
+	  	  		  {
+	  	  			key4_count=0;
+	  	  		  }
 //////	  	  		  dindonf=!dindonf;
 	  	  	  }
 	  	  	  if((key[3]==0) && (key_f[3]==1))
@@ -500,7 +506,33 @@ int main(void)
 //
 	  out_num();							//вывод цифр для индикации
 //
+	  if(key4_count==0)
+//Выключение рекуперации, вдува и выдува
+	  {
+		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_RESET);
+		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_RESET);
+		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
+	  }
+	  if(key4_count==1)
+//Выдув
+	  {
+		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);		//выдув
+		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_RESET);
+		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
+		  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_0);
+	  }
+//Вдув
+	  if(key4_count==2)
+	  	  {
+	  		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_SET);		//вдув
+	  		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+	  		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_RESET);
+	  		  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_1);
+	  	  }
 //Работа рекуператора
+	  if(key4_count==3)
+	  {
 	    co++;
 	    	if(co == 1)
 	    	{
@@ -521,6 +553,7 @@ int main(void)
 	    	{
 	    		co = 0;
 	    	}
+	  }
 //
 //
   }
@@ -553,10 +586,9 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE|RCC_OSCILLATORTYPE_LSE;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
-  RCC_OscInitStruct.LSEState = RCC_LSE_ON;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
@@ -579,7 +611,7 @@ void SystemClock_Config(void)
     Error_Handler();
   }
   PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_RTC;
-  PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
+  PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_HSE_DIV128;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
     Error_Handler();
@@ -598,11 +630,10 @@ static void MX_RTC_Init(void)
 
   /* USER CODE END RTC_Init 0 */
 
-  //RTC_TimeTypeDef sTime = {0};
-  RTC_DateTypeDef DateToUpdate = {0};
+ // RTC_TimeTypeDef sTime = {0};
+ // RTC_DateTypeDef DateToUpdate = {0};
 
   /* USER CODE BEGIN RTC_Init 1 */
-
   /* USER CODE END RTC_Init 1 */
   /** Initialize RTC Only
   */
@@ -624,17 +655,14 @@ static void MX_RTC_Init(void)
   sTime.Minutes = 38;
   sTime.Seconds = 0;
 
-  //if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN) != HAL_OK)
-  //{
+//  if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN) != HAL_OK)
+//  {
 //    Error_Handler();
 //  }
   DateToUpdate.WeekDay = RTC_WEEKDAY_MONDAY;
   DateToUpdate.Month = RTC_MONTH_JANUARY;
   DateToUpdate.Date = 1;
   DateToUpdate.Year = 20;
-
-  BKP->RTCCR |= 28;                                                                        //калибровка RTC
-  RTC->PRLL  = 0x7FFE;                                                                    //Настроит делитель на 32768 (32767+1)
 
   if (HAL_RTC_SetDate(&hrtc, &DateToUpdate, RTC_FORMAT_BIN) != HAL_OK)
   {

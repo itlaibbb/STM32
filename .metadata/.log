@@ -135,3 +135,137 @@ Command-line arguments:  -os linux -ws gtk -arch x86_64
 
 !ENTRY com.st.stm32cube.ide.mcu.ide 4 4 2021-04-12 16:15:45.302
 !MESSAGE com.st.stm32cube.ide.mcu.ide/META-INF/version/build_ref file not found, build reference will not be reported into properties
+!SESSION 2021-04-15 16:12:47.700 -----------------------------------------------
+eclipse.buildId=Version 1.6.1
+java.version=11.0.9.1
+java.vendor=AdoptOpenJDK
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=ru_RU
+Command-line arguments:  -os linux -ws gtk -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2021-04-15 16:13:00.772
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2021-04-15 16:13:01.000
+!MESSAGE Log4j initialized with config file /home/itlai/DIST/STM32/.metadata/.log4j.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2021-04-15 16:13:13.983
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 4 4 2021-04-15 16:13:14.370
+!MESSAGE com.st.stm32cube.ide.mcu.ide/META-INF/version/build_ref file not found, build reference will not be reported into properties
+!SESSION 2021-04-21 14:50:59.004 -----------------------------------------------
+eclipse.buildId=Version 1.6.1
+java.version=11.0.9.1
+java.vendor=AdoptOpenJDK
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=ru_RU
+Command-line arguments:  -os linux -ws gtk -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2021-04-21 14:51:14.674
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2021-04-21 14:51:14.820
+!MESSAGE Log4j initialized with config file /home/itlai/DIST/STM32/.metadata/.log4j.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2021-04-21 14:51:28.842
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 4 4 2021-04-21 14:51:29.235
+!MESSAGE com.st.stm32cube.ide.mcu.ide/META-INF/version/build_ref file not found, build reference will not be reported into properties
+
+!ENTRY org.eclipse.cdt.dsf.gdb 4 5012 2021-04-21 15:17:43.778
+!MESSAGE Error in final launch sequence:
+
+Failed to execute MI command:
+load /home/itlai/DIST/STM32/clock4windows/Debug/clock4windows.elf 
+
+Error message from debugger back end:
+Error erasing flash with vFlashErase packet
+!STACK 1
+org.eclipse.core.runtime.CoreException: Failed to execute MI command:
+load /home/itlai/DIST/STM32/clock4windows/Debug/clock4windows.elf 
+
+Error message from debugger back end:
+Error erasing flash with vFlashErase packet
+	at org.eclipse.cdt.dsf.concurrent.Query.get(Query.java:112)
+	at org.eclipse.cdt.dsf.gdb.launching.GdbLaunchDelegate.launchDebugSession(GdbLaunchDelegate.java:242)
+	at org.eclipse.cdt.dsf.gdb.launching.GdbLaunchDelegate.launchDebugger(GdbLaunchDelegate.java:106)
+	at org.eclipse.cdt.dsf.gdb.launching.GdbLaunchDelegate.launch(GdbLaunchDelegate.java:94)
+	at com.st.stm32cube.ide.mcu.debug.launch.DSFDelegate.launch(DSFDelegate.java:307)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:807)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:718)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin.buildAndLaunch(DebugUIPlugin.java:1021)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin$2.run(DebugUIPlugin.java:1224)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Contains: Failed to execute MI command:
+load /home/itlai/DIST/STM32/clock4windows/Debug/clock4windows.elf 
+
+Error message from debugger back end:
+Error erasing flash with vFlashErase packet
+java.lang.Exception: Error erasing flash with vFlashErase packet
+	at org.eclipse.cdt.dsf.mi.service.command.AbstractMIControl$RxThread.processMIOutput(AbstractMIControl.java:993)
+	at org.eclipse.cdt.dsf.mi.service.command.AbstractMIControl$RxThread.run(AbstractMIControl.java:822)
+!SUBENTRY 1 org.eclipse.cdt.dsf 4 10004 2021-04-21 15:17:43.779
+!MESSAGE Failed to execute MI command:
+load /home/itlai/DIST/STM32/clock4windows/Debug/clock4windows.elf 
+
+Error message from debugger back end:
+Error erasing flash with vFlashErase packet
+!SUBENTRY 2 org.eclipse.cdt.dsf.gdb 4 10004 2021-04-21 15:17:43.779
+!MESSAGE Failed to execute MI command:
+load /home/itlai/DIST/STM32/clock4windows/Debug/clock4windows.elf 
+
+Error message from debugger back end:
+Error erasing flash with vFlashErase packet
+!STACK 0
+java.lang.Exception: Error erasing flash with vFlashErase packet
+	at org.eclipse.cdt.dsf.mi.service.command.AbstractMIControl$RxThread.processMIOutput(AbstractMIControl.java:993)
+	at org.eclipse.cdt.dsf.mi.service.command.AbstractMIControl$RxThread.run(AbstractMIControl.java:822)
+
+!ENTRY org.eclipse.cdt.dsf.gdb 4 5012 2021-04-21 15:18:12.855
+!MESSAGE Error in final launch sequence:
+
+Failed to execute MI command:
+load /home/itlai/DIST/STM32/clock4windows/Debug/clock4windows.elf 
+
+Error message from debugger back end:
+Error erasing flash with vFlashErase packet
+!STACK 1
+org.eclipse.core.runtime.CoreException: Failed to execute MI command:
+load /home/itlai/DIST/STM32/clock4windows/Debug/clock4windows.elf 
+
+Error message from debugger back end:
+Error erasing flash with vFlashErase packet
+	at org.eclipse.cdt.dsf.concurrent.Query.get(Query.java:112)
+	at org.eclipse.cdt.dsf.gdb.launching.GdbLaunchDelegate.launchDebugSession(GdbLaunchDelegate.java:242)
+	at org.eclipse.cdt.dsf.gdb.launching.GdbLaunchDelegate.launchDebugger(GdbLaunchDelegate.java:106)
+	at org.eclipse.cdt.dsf.gdb.launching.GdbLaunchDelegate.launch(GdbLaunchDelegate.java:94)
+	at com.st.stm32cube.ide.mcu.debug.launch.DSFDelegate.launch(DSFDelegate.java:307)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:807)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:718)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin.buildAndLaunch(DebugUIPlugin.java:1021)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin$2.run(DebugUIPlugin.java:1224)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Contains: Failed to execute MI command:
+load /home/itlai/DIST/STM32/clock4windows/Debug/clock4windows.elf 
+
+Error message from debugger back end:
+Error erasing flash with vFlashErase packet
+java.lang.Exception: Error erasing flash with vFlashErase packet
+	at org.eclipse.cdt.dsf.mi.service.command.AbstractMIControl$RxThread.processMIOutput(AbstractMIControl.java:993)
+	at org.eclipse.cdt.dsf.mi.service.command.AbstractMIControl$RxThread.run(AbstractMIControl.java:822)
+!SUBENTRY 1 org.eclipse.cdt.dsf 4 10004 2021-04-21 15:18:12.856
+!MESSAGE Failed to execute MI command:
+load /home/itlai/DIST/STM32/clock4windows/Debug/clock4windows.elf 
+
+Error message from debugger back end:
+Error erasing flash with vFlashErase packet
+!SUBENTRY 2 org.eclipse.cdt.dsf.gdb 4 10004 2021-04-21 15:18:12.856
+!MESSAGE Failed to execute MI command:
+load /home/itlai/DIST/STM32/clock4windows/Debug/clock4windows.elf 
+
+Error message from debugger back end:
+Error erasing flash with vFlashErase packet
+!STACK 0
+java.lang.Exception: Error erasing flash with vFlashErase packet
+	at org.eclipse.cdt.dsf.mi.service.command.AbstractMIControl$RxThread.processMIOutput(AbstractMIControl.java:993)
+	at org.eclipse.cdt.dsf.mi.service.command.AbstractMIControl$RxThread.run(AbstractMIControl.java:822)
